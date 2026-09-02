@@ -1,0 +1,18 @@
+---
+import { getPublishedCollection } from "astro-course-university/content";
+import Card from "astro-theme-university/components/Card.astro";
+import CardGrid from "astro-theme-university/components/CardGrid.astro";
+
+const topics = await getPublishedCollection("topics");
+const visible = topics.sort((a, b) => a.data.title.localeCompare(b.data.title));
+---
+
+<CardGrid columns={2}>
+  {
+    visible.map((topic) => (
+      <Card headingLevel="h2" title={topic.data.title} href={`/topics/${topic.id}/`}>
+        {topic.data.description && <p>{topic.data.description}</p>}
+      </Card>
+    ))
+  }
+</CardGrid>

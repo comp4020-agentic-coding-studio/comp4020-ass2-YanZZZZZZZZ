@@ -1,0 +1,30 @@
+---
+import { render } from "astro:content";
+import { getPublishedCollection } from "astro-course-university/content";
+import RelatedContent from "astro-course-university/components/RelatedContent.astro";
+import Callout from "astro-theme-university/components/Callout.astro";
+import ContentLayout from "astro-theme-university/layouts/ContentLayout.astro";
+import { graphCollections, siteConfig } from "../../site-config";
+
+export async function getStaticPaths() {
+  const topics = await getPublishedCollection("topics");
+  return topics.map((topic) => ({ params: { slug: topic.id }, props: { topic } }));
+}
+
+const { topic } = Astro.props;
+const { Content } = await render(topic);
+---
+
+<ContentLayout title={topic.data.title} description={topic.data.description} {...siteConfig}>
+  {
+    topic.data.draft && (
+      <Callout type="warning">
+        <p>
+          <strong>Draft.</strong> This topic is still being written and may change.
+        </p>
+      </Callout>
+    )
+  }
+  <Content />
+  <RelatedContent entry={topic} collections={graphCollections} />
+</ContentLayout>

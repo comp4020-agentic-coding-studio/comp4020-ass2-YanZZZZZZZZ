@@ -70,6 +70,15 @@ export const collections = {
       .loose(),
   }),
 
+  // This course's own addition to the fixed four above: an undated
+  // collection of the subsystem-level arguments (the bonfire economy, combat
+  // legibility, ...) a lecture links into, rather than a week-by-week
+  // duplicate of the schedule.
+  topics: defineCollection({
+    loader: courseNodeLoader("topics"),
+    schema: courseNodeSchema.loose(),
+  }),
+
   people: defineCollection({
     loader: courseNodeLoader("people"),
     schema: ({ image }) =>

@@ -9,7 +9,7 @@ export const sessionLabels = {
   plural: "Sessions",
 } as const;
 
-export const graphCollections = ["sessions", "assessments", "lectures", "people"];
+export const graphCollections = ["sessions", "assessments", "lectures", "topics", "people"];
 
 export const courseApiCollections = [
   ...graphCollections.map((key) => ({ key })),
@@ -23,6 +23,7 @@ export const siteConfig = defineSiteConfig({
   links: [
     { text: "Lectures", href: "/lectures/" },
     { text: sessionLabels.plural, href: "/sessions/" },
+    { text: "Topics", href: "/topics/" },
     { text: "Assessment", href: "/assessments/" },
     { text: "People", href: "/people/" },
     { text: "Policies", href: "/policies/" },
