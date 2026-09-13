@@ -66,3 +66,28 @@ import { sessionLabels, siteConfig } from "../site-config";
     font-size: 0.9rem;
   }
 </style>
+
+<style is:global>
+  /* Course emblem (a broken ring — the Undead Curse's loop, never fully
+     closed — around a bonfire), stamped above the hero title. This is
+     artwork this course adds on top of the hero, not a swap of Slop's own
+     crest/lockup: it's drawn as a CSS mask so its one colour comes from
+     --at-primary rather than a hex baked into an image asset. `is:global`
+     is what lets a rule written here reach into the Hero component's own
+     markup; Astro still only ships this block on pages that render this
+     component, i.e. the home page alone. */
+  .at-hero-title::before {
+    content: "";
+    display: block;
+    width: 3.25rem;
+    height: 3.25rem;
+    margin-block-end: var(--at-spacing-md);
+    background-color: var(--at-primary);
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M29.4,79.5 A36,36 0 1 1 70.6,79.5' fill='none' stroke='%23000' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M50,30 C41,41 39,52 46,59 C41,55 39,61 44,68 C39,66 42,75 50,80 C58,75 61,66 56,68 C61,61 59,55 54,59 C61,52 59,41 50,30 Z' fill='%23000'/%3E%3C/svg%3E");
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M29.4,79.5 A36,36 0 1 1 70.6,79.5' fill='none' stroke='%23000' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M50,30 C41,41 39,52 46,59 C41,55 39,61 44,68 C39,66 42,75 50,80 C58,75 61,66 56,68 C61,61 59,55 54,59 C61,52 59,41 50,30 Z' fill='%23000'/%3E%3C/svg%3E");
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+  }
+</style>
