@@ -10,4 +10,11 @@
  * only the brand CSS and this file. Add your own rules below the import: a
  * slide class you reach for (`_class: quote`), a code-heavy layout, a
  * background. */
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&display=swap");
 @import url("astro-theme-university/styles/deck.css");
+
+/* The same engraved-stone display face PageLayout.astro gives the site's
+   headings, so a deck reads as the same course rather than a detour. */
+:is(h1, h2, h3) {
+  font-family: "Cinzel", var(--at-font-body);
+}

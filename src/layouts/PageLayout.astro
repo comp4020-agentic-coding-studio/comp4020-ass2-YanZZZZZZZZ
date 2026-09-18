@@ -6,3 +6,39 @@ import { siteConfig } from "../site-config";
 <MdxPageLayout siteConfig={siteConfig} {...Astro.props}>
   <slot />
 </MdxPageLayout>
+
+<!--
+  The gothic, bonfire-lit register lives here, as a layer on top of the
+  fixed Slop brand tokens — never a replacement of them. Headings borrow an
+  engraved-stone display face; cards get a worn, ember-lit top edge derived
+  from --at-primary rather than a hand-typed colour, so this skin and the
+  brand can't drift apart.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&display=swap"
+  rel="stylesheet"
+/>
+
+<style is:global>
+  :is(h1, h2, h3):not(.at-deck h1, .at-deck h2, .at-deck h3) {
+    font-family: "Cinzel", var(--at-font-body);
+    letter-spacing: 0.01em;
+  }
+
+  .at-card {
+    border-top: 2px solid color-mix(in oklch, var(--at-primary) 70%, transparent);
+    background: color-mix(in oklch, var(--at-bg) 96%, var(--at-tertiary));
+  }
+
+  .at-hero {
+    background:
+      radial-gradient(
+        ellipse 120% 60% at 50% -10%,
+        color-mix(in oklch, var(--at-primary) 14%, transparent),
+        transparent
+      ),
+      var(--at-bg);
+  }
+</style>
