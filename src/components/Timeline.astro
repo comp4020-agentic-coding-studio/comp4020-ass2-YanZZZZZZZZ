@@ -1,0 +1,116 @@
+---
+import { getPublishedCollection } from "astro-course-university/content";
+import { withBase } from "astro-theme-university/url";
+
+const lectures = await getPublishedCollection("lectures");
+const sessions = await getPublishedCollection("sessions");
+const assessments = await getPublishedCollection("assessments");
+
+type WeekEntry =
+  | { entry: (typeof lectures)[number]; kind: "lectures" }
+  | { entry: (typeof sessions)[number]; kind: "sessions" };
+
+const byWeek = new Map<number, WeekEntry>(
+  lectures.map((lecture) => [lecture.data.week, { entry: lecture, kind: "lectures" }]),
+);
+for (const session of sessions) {
+  if (!byWeek.has(session.data.week)) {
+    byWeek.set(session.data.week, { entry: session, kind: "sessions" });
+  }
+}
+
+const dueByWeek = new Map<number, string[]>();
+for (const assessment of assessments) {
+  const titles = dueByWeek.get(assessment.data.week) ?? [];
+  titles.push(assessment.data.title);
+  dueByWeek.set(assessment.data.week, titles);
+}
+
+const weeks = [...byWeek.entries()]
+  .sort(([a], [b]) => a - b)
+  .map(([week, { entry, kind }]) => ({
+    week,
+    title: entry.data.title,
+    description: entry.data.description,
+    href: withBase(`/${kind}/${entry.id}/`),
+    due: dueByWeek.get(week),
+  }));
+---
+
+<ol class="timeline">
+  {
+    weeks.map((w) => (
+      <li class="timeline-item">
+        <span class="timeline-week" aria-hidden="true">
+          {w.week}
+        </span>
+        <div class="timeline-body">
+          <h3>
+            <a href={w.href}>{w.title}</a>
+          </h3>
+          {w.description && <p>{w.description}</p>}
+          {w.due && <p class="timeline-due">Due: {w.due.join(", ")}</p>}
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  /* Line and node colour both derive from --at-primary via color-mix, the
+     same approach PageLayout.astro uses for .at-card, so this skin can't
+     drift from the brand token. */
+  .timeline {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .timeline::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    left: 1.1rem;
+    width: 2px;
+    background: color-mix(in oklch, var(--at-primary) 40%, transparent);
+  }
+
+  .timeline-item {
+    position: relative;
+    padding-inline-start: 3rem;
+    margin-block-end: 2rem;
+  }
+
+  .timeline-item:last-child {
+    margin-block-end: 0;
+  }
+
+  .timeline-week {
+    position: absolute;
+    inset-block-start: 0;
+    left: 0;
+    display: grid;
+    width: 2.2rem;
+    height: 2.2rem;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--at-primary);
+    color: var(--at-bg);
+    font-family: "Cinzel", var(--at-font-body);
+    font-weight: 700;
+  }
+
+  .timeline-body h3 {
+    margin-block: 0 0.25rem;
+  }
+
+  .timeline-body p {
+    margin-block: 0.25rem;
+  }
+
+  .timeline-due {
+    color: var(--at-text-secondary);
+    font-size: 0.9rem;
+  }
+</style>
