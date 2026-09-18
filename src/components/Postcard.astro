@@ -1,0 +1,212 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Props {
+  title: string;
+  gamerAvatar?: ImageMetadata;
+  gamerAvatarAlt?: string;
+  gamerAge?: string;
+  gamesPlayed?: string[];
+}
+
+const { title, gamerAvatar, gamerAvatarAlt, gamerAge, gamesPlayed } = Astro.props;
+---
+
+{
+  (gamerAge || gamesPlayed) && (
+    <details class="postcard">
+      <summary class="postcard-summary">
+        {gamerAvatar && (
+          <span class="postcard-stamp">
+            <Image src={gamerAvatar} alt={gamerAvatarAlt ?? ""} width={72} height={72} />
+          </span>
+        )}
+        <span class="postcard-summary-text">
+          <span class="postcard-kicker">Player file</span>
+          <span class="postcard-name">{title}</span>
+          {gamerAge && (
+            <span class="postcard-age">
+              <strong>Gamer age</strong> {gamerAge}
+            </span>
+          )}
+        </span>
+        {gamesPlayed && (
+          <span class="postcard-toggle">
+            Games played ({gamesPlayed.length})<span class="postcard-chevron" aria-hidden="true" />
+          </span>
+        )}
+      </summary>
+      {gamesPlayed && (
+        <div class="postcard-reveal">
+          <div class="postcard-reveal-inner">
+            <ul class="postcard-games">
+              {gamesPlayed.map((game) => (
+                <li>{game}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+    </details>
+  )
+}
+
+<style>
+  /* A player-file postcard: the avatar reads as a stamp in the corner, the
+     gaming age as the postmark line, and the games list as the part you
+     have to open the envelope for. Colour and border both derive from
+     --at-primary via color-mix, matching Timeline's bonfires and .at-card,
+     so this skin can't drift from the brand tokens. Interaction is a native
+     <details> disclosure — keyboard- and screen-reader-operable with zero
+     JS, the same "CSS-only skin, not a widget" register as Timeline's
+     hover reveal. */
+  .postcard {
+    margin-block: 1.5rem;
+    border: 1px solid color-mix(in oklch, var(--at-primary) 35%, transparent);
+    border-radius: var(--at-radius-md, 0.5rem);
+    background: var(--at-bg-alt);
+    background-image: repeating-linear-gradient(
+      135deg,
+      color-mix(in oklch, var(--at-primary) 4%, transparent) 0 2px,
+      transparent 2px 12px
+    );
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .postcard:hover,
+  .postcard:focus-within {
+    transform: translateY(-3px) rotate(-0.4deg);
+    box-shadow: 0 8px 20px color-mix(in oklch, black 20%, transparent);
+  }
+
+  .postcard-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .postcard-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .postcard-summary:focus-visible {
+    outline: 2px solid var(--at-primary);
+    outline-offset: 2px;
+  }
+
+  .postcard-stamp {
+    flex-shrink: 0;
+    display: block;
+    padding: 0.3rem;
+    border: 2px dashed color-mix(in oklch, var(--at-primary) 55%, transparent);
+    border-radius: 0.25rem;
+    background: var(--at-bg);
+    transform: rotate(-3deg);
+  }
+
+  .postcard-stamp img {
+    display: block;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0.15rem;
+  }
+
+  .postcard-summary-text {
+    display: flex;
+    flex: 1 1 14rem;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  .postcard-kicker {
+    color: var(--at-text-secondary);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .postcard-name {
+    font-family: "Cinzel", var(--at-font-body);
+    font-size: 1.1rem;
+  }
+
+  .postcard-age {
+    color: var(--at-text-secondary);
+    font-size: 0.9rem;
+  }
+
+  .postcard-age strong {
+    color: inherit;
+    font-weight: 700;
+  }
+
+  .postcard-toggle {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid color-mix(in oklch, var(--at-primary) 45%, transparent);
+    border-radius: 999px;
+    color: var(--at-primary);
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  .postcard-chevron {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+  }
+
+  .postcard[open] .postcard-chevron {
+    transform: rotate(-135deg);
+  }
+
+  /* Smooth open/close without JS: the grid row goes 0fr -> 1fr, and the
+     inner div's overflow hides the content while it's collapsed. */
+  .postcard-reveal {
+    display: grid;
+    grid-template-rows: 0fr;
+    padding-inline: 1.25rem;
+    transition: grid-template-rows 0.25s ease;
+  }
+
+  .postcard[open] .postcard-reveal {
+    grid-template-rows: 1fr;
+    padding-block-end: 1.1rem;
+  }
+
+  .postcard-reveal-inner {
+    overflow: hidden;
+  }
+
+  .postcard-games {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.6rem;
+    margin: 0;
+    padding: 0.75rem 0 0;
+    border-block-start: 1px dashed color-mix(in oklch, var(--at-primary) 35%, transparent);
+    list-style: none;
+  }
+
+  .postcard-games li {
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: var(--at-bg);
+    font-size: 0.85rem;
+  }
+</style>

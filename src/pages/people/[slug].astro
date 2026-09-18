@@ -2,6 +2,7 @@
 import { render } from "astro:content";
 import { getPublishedCollection } from "astro-course-university/content";
 import ContentLayout from "astro-theme-university/layouts/ContentLayout.astro";
+import Postcard from "../../components/Postcard.astro";
 import { siteConfig } from "../../site-config";
 
 export async function getStaticPaths() {
@@ -12,10 +13,11 @@ export async function getStaticPaths() {
 const { person } = Astro.props;
 const { Content } = await render(person);
 
-// Map the role enum (convenor|tutor|guest|other) to display labels rather than
-// rendering the raw lowercase value.
+// Map the role enum (convenor|lecturer|tutor|guest|other) to display labels
+// rather than rendering the raw lowercase value.
 const roleLabels: Record<string, string> = {
   convenor: "Convenor",
+  lecturer: "Lecturer",
   tutor: "Tutor",
   guest: "Guest lecturer",
   other: "",
@@ -69,6 +71,14 @@ const description = person.data.description;
     <dt>Contact</dt>
     <dd>{person.data.contact}</dd>
   </dl>
+
+  <Postcard
+    title={person.data.title}
+    gamerAvatar={person.data.gamerAvatar}
+    gamerAvatarAlt={person.data.gamerAvatarAlt}
+    gamerAge={person.data.gamerAge}
+    gamesPlayed={person.data.gamesPlayed}
+  />
 
   <Content />
 </ContentLayout>
