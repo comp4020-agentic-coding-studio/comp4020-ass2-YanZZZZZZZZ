@@ -5,38 +5,56 @@ template's empty starting note.
 
 ## The course, in one sentence
 
-A Souls-like withholds comfort on purpose, in every subsystem at once — death,
-combat, geography, story, sound, community — and the withholding is the
-design, not a side effect of it. "Difficulty" is the lazy word for what the
-genre is doing. **Every week tests that claim against one subsystem.** If a
-week's content could be lifted out and dropped into a generic "intro to game
-design" course without rewriting a sentence, it has failed the thesis and
-needs to be rewritten, not padded.
+Real difficulty doesn't kill the player — it makes them certain, the instant
+after they die, that the next attempt can win. This course treats the
+Souls-like as a punitive architecture: a systemic dissection of its spatial
+storytelling, risk psychology and minimal guidance, taught as design
+methodology rather than critical theory. **Every week is a workshop that
+produces an artefact** (a map sketch, an item description, a boss blueprint,
+a UI redesign), not just an argument about one. If a week's exercise could be
+lifted into a generic "intro to level design" course without touching a
+sentence, it has failed the thesis and needs to be rewritten, not padded.
 
 ## Working 12-week arc (reference, not frozen)
 
-1. Defining the lineage — Demon's Souls → Dark Souls → the genre it spawned
-2. The bonfire economy — death, currency and risk as one system
-3. Combat legibility — telegraphs, stamina, the grammar of an attack
-4. Level design — interconnected shortcuts, verticality, the map "opening up"
-5. Environmental storytelling — lore without exposition, item text as narrative
-6. Boss design as argument
-7. **Assignment 1 due** — a close reading of one boss or one area against the
-   thesis
-8. Sound, silence, and the absence of a soundtrack
-9. Community as co-author — messages, wikis, "git gud" as a culture, not a taunt
-10. The difficulty debate — accessibility criticism vs. "the difficulty is the
-    point," argued fairly on both sides
-11. Invasions and designed antagonism — the multiplayer that refuses to be co-op
-12. Genre codification — soulslikes after FromSoftware: inheritance, or just
-    the furniture of a genre now?
-Final project: a design document or a critical essay, student's choice, judged
-against the thesis either way.
+1. Welcome to the masochism club — punishing difficulty vs. cheating
+   difficulty, and why players choose the first willingly
+2. Death as a narrative verb — the Undead Curse, hollowing, and item
+   description as unreliable narration
+3. Level design as argument — interconnected shortcuts (Firelink Shrine as
+   hub) and soft visual guidance without a minimap
+4. The rhetoric of combat — telegraphs, poise as a hidden metronome, the
+   grammar of a wind-up
+5. Boss design as dramatic climax — **Boss Blueprint due** (25%): a
+   two-phase boss, its transition trigger and narrative justification
+6. Midpoint review, no new subsystem — the map/combat/narrative triangle so
+   far, peer review of the Boss Blueprint, Final Project brief released
+7. Build as projection — attributes as the persona a player projects, not
+   just a stat sheet; **Loadout Pitch due** (20%)
+8. The economy — souls/runes as the stake, loss aversion, why the levelling
+   cost curve is the most precisely tuned number in the game
+9. Asynchronous resonance — messages, bloodstains, phantoms; empathy built
+   without real-time contact
+10. Minimal UI and immersion — why the genre deletes the quest log, and what
+    that subtraction forces the player to remember instead
+11. Weak guidance and the value of a "bad" ending — ambiguous NPC dialogue as
+    navigation, tragedy that outlasts a happy ending
+12. Final showcase, the bonfire crit — **Final Project due** (35%): a
+    complete opening-level one-pager (map sketch, two item descriptions, one
+    boss's move summary, an opening weak-guidance script)
 
-Reordering or merging weeks is fine if a rewrite earns it. Adding a week that
-doesn't attach to a subsystem in this list is not — check against this arc
-before writing new content, and update this arc in the same commit if it
-genuinely needs to change.
+Death Notes (20%) run underneath the first eleven weeks — a ~200-word entry
+per week naming one concrete moment from that week's material, not a genre
+generality — submitted the week it covers rather than bundled at the end.
+The best ten of eleven count, so one missed or weak week doesn't need its
+own extension request.
+
+Reordering or merging weeks is fine if a rewrite earns it (weeks 3 above are
+already a deliberate merge of two related exercises, done to fit the
+12-week cap the content schema enforces). Adding a week that doesn't produce
+a workshop artefact is not — check against this arc before writing new
+content, and update this arc in the same commit if it genuinely needs to
+change.
 
 ## Platform: fixed, not up for reinterpretation
 
@@ -47,9 +65,11 @@ the generated course API and the build pipeline (`astro.config.ts`) are the
 fixed contract the programs-and-courses page reads, and swapping stacks
 breaks it silently rather than loudly.
 
-Content lives in the four existing collections under `src/content/`
-(`sessions`, `assessments`, `lectures`, `people`) validated by
-`src/content.config.ts`. Never invent a parallel data file (no
+Content lives in the collections under `src/content/` (`sessions`,
+`assessments`, `lectures`, `topics`, `people`) validated by
+`src/content.config.ts` — `topics` is this course's own addition, an undated
+collection for the subsystem-level essay a lecture points at rather than a
+week-by-week duplicate of the schedule. Never invent a parallel data file (no
 `src/data/schedule.ts` or similar) — a thirteenth week or a new assessment is
 a new markdown file in the collection it belongs to, nothing else.
 
@@ -90,8 +110,9 @@ rewrite it.
 - Small commits, one decision each. A content week going from a skeleton to a
   finished page, a spec check going red→green, a CLAUDE.md rule added after a
   correction — each is its own commit with a message that says *why*, not just
-  *what* (`week 6: cut the accessibility debate down to one week — it kept
-  eating week 5's material`, not `update content`).
+  *what* (`week 3: merge the two level-design halves into one workshop —
+  interconnection and soft guidance are one argument, not two`, not `update
+  content`).
 - Write the spec check before the content it protects, where that's possible.
   A red test on a promise not yet kept is the expected starting state, not a
   problem to hide.
@@ -105,9 +126,12 @@ rewrite it.
 
 ## Explicitly not doing
 
-- No custom interactive widget unless a specific week's argument needs one
-  (e.g. a boss-attack "telegraph" timing demo) — not added to pad the page
-  count.
+- No custom interactive widget unless a specific week's argument needs one —
+  not added to pad the page count. Two are earmarked because a specific
+  week's material asks for them: a death-currency cost calculator on
+  [the economy](/topics/) (week 8) and a click-to-parry timing demo on
+  [combat rhetoric](/topics/) (week 4). Build them as their own commit, after
+  the week's prose content is in and green, not before.
 - No policies page unless there's a real policy worth stating beyond what a
   generic course would say; a placeholder policy page is worse than none.
 - No week added purely to reach twelve if the thesis runs out of subsystems
