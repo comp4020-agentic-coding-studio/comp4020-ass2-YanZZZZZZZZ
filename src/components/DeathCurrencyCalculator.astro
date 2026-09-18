@@ -1,0 +1,103 @@
+---
+// Week 8: makes the bonfire economy's core bet legible as a number, not just
+// a paragraph — how much of your held souls a second death actually costs.
+---
+
+<div class="death-currency-calculator">
+  <div class="row">
+    <label for="souls-held">Souls held right now</label>
+    <input id="souls-held" type="range" min="0" max="20000" step="250" value="6000" />
+    <output for="souls-held" id="souls-held-value">6000</output>
+  </div>
+  <div class="row">
+    <label for="death-risk">Chance you die again before reaching them</label>
+    <input id="death-risk" type="range" min="0" max="100" step="5" value="40" />
+    <output for="death-risk" id="death-risk-value">40%</output>
+  </div>
+  <p class="result" id="calculator-result" aria-live="polite"></p>
+</div>
+
+<style>
+  .death-currency-calculator {
+    border: 1px solid color-mix(in oklch, var(--at-primary) 40%, transparent);
+    background: color-mix(in oklch, var(--at-bg) 94%, var(--at-tertiary));
+    border-radius: 0.5rem;
+    padding: 1.25rem 1.5rem;
+    margin-block: 1.5rem;
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr minmax(10rem, 2fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .row label {
+    font-size: 0.95rem;
+  }
+
+  .row output {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    min-width: 4ch;
+  }
+
+  .result {
+    margin: 0;
+    padding-top: 0.6rem;
+    border-top: 1px solid color-mix(in oklch, var(--at-primary) 25%, transparent);
+    font-weight: 600;
+  }
+
+  @media (max-width: 30rem) {
+    .row {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+    .row output {
+      text-align: left;
+    }
+  }
+</style>
+
+<script>
+  function initCalculator(root: HTMLElement) {
+    const soulsInput = root.querySelector<HTMLInputElement>("#souls-held")!;
+    const riskInput = root.querySelector<HTMLInputElement>("#death-risk")!;
+    const soulsValue = root.querySelector("#souls-held-value")!;
+    const riskValue = root.querySelector("#death-risk-value")!;
+    const result = root.querySelector("#calculator-result")!;
+
+    function render() {
+      const souls = Number(soulsInput.value);
+      const risk = Number(riskInput.value);
+      soulsValue.textContent = souls.toLocaleString();
+      riskValue.textContent = `${risk}%`;
+
+      const expectedLoss = Math.round(souls * (risk / 100));
+      let takeaway: string;
+      if (risk === 0) {
+        takeaway = "Zero risk means the souls were never actually at stake — bank them or don't.";
+      } else if (expectedLoss < souls * 0.15) {
+        takeaway = "A cheap bet: worth pushing on rather than walking back to spend them now.";
+      } else if (expectedLoss < souls * 0.5) {
+        takeaway = "Expensive enough that most players would bank first and push after.";
+      } else {
+        takeaway = "You are gambling most of what you're carrying on the next few steps.";
+      }
+
+      result.textContent = `Expected loss: ${expectedLoss.toLocaleString()} souls. ${takeaway}`;
+    }
+
+    soulsInput.addEventListener("input", render);
+    riskInput.addEventListener("input", render);
+    render();
+  }
+
+  document
+    .querySelectorAll<HTMLElement>(".death-currency-calculator")
+    .forEach(initCalculator);
+</script>
