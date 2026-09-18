@@ -1,0 +1,42 @@
+---
+title: Combat legibility
+description:
+  Why a Souls-like's combat withholds information rather than reflexes, and
+  how telegraphs, stamina and animation commitment are the same argument
+tags: [systems, combat]
+related:
+  - lectures/week-04
+---
+
+Call a Souls-like "hard" and most people mean the combat, and most people
+mean it wrong: reaction speed is rarely the actual test. Dark Souls' attacks
+are slower, on average, than a modern shooter's decision loop — the test is
+whether you can **read** an attack before it lands, from a wind-up the game
+has committed to showing you in full. Legibility, not speed, is the
+currency.
+
+Three systems do this work together. The telegraph is the withholding of
+outcome until a specific, learnable cue has played — the game refuses to
+tell you what's coming except through the animation itself, so watching
+becomes the skill, not memorising a damage number. Stamina is the
+withholding of infinite action — every swing, dodge and block spends a
+shared resource, so aggression has to be paid for in tempo, not just risk.
+Animation commitment is the withholding of the undo — once a swing starts,
+the input has already been spent, whether or not the target moved. A miss
+costs the same stamina and the same vulnerable window as a hit.
+
+Put together, the fight is legible in the sense a chess position is
+legible: nothing is hidden, and losing means you misread information that
+was genuinely available. This is where a game can borrow the aesthetic and
+fail the test simultaneously — a boss with an unreadable one-frame grab
+that no telegraph precedes isn't hard in this genre's sense, it's opaque,
+and opacity is a different (and lesser) design than withholding. Sekiro
+pushes legibility furthest: deflection timing turns almost every exchange
+into a pure read-and-respond loop, stripped of the stat-and-gear layer that
+lets other entries paper over a bad read with a bigger number.
+
+The test from [the masochism club](/topics/masochism-club/) applies here
+directly: a telegraph a player can learn to beat is a punishing failure, one
+the player can name after the fact. A one-frame unreadable attack is a
+cheating one — and this course marks the difference, even when both look
+identical on stream.
