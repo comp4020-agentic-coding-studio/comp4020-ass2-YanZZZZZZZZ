@@ -105,6 +105,22 @@ Banned by default, because they're the tells of unedited agent prose:
 If a sentence sounds like it's selling the course rather than teaching it,
 rewrite it.
 
+## Marking
+
+A flat percentage split ("50% X, 50% Y") is not a rubric — every criterion
+gets its own grade bands, worded for that specific criterion, not a generic
+scale restated four times. Tier names are this course's own combat
+vocabulary standing in for HD/D/C/N: Full-health clear, Clean kill, Died
+once — adapted, You died (the fail tier literally quotes the game's own
+game-over text). Every assessment worth 20% or more pairs its artefact with
+a short reflection naming one specific decision the artefact doesn't show
+on its own — not "what did you learn," a moment. A recurring weekly
+deliverable (Death Notes) is marked as a portfolio of independent entries
+with a drop-lowest buffer and a due date per entry, not a single
+end-of-semester document scored once — model the schema after how the
+assessment is actually submitted, not after whatever the existing schema
+made easiest to validate.
+
 ## Process
 
 - Small commits, one decision each. A content week going from a skeleton to a
