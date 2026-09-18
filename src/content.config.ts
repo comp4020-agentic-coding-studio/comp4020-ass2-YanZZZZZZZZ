@@ -93,6 +93,10 @@ export const collections = {
           url: z.url().optional(),
           photo: image().optional(),
           photoAlt: z.string().trim().optional(),
+          gamerAvatar: image().optional(),
+          gamerAvatarAlt: z.string().trim().optional(),
+          gamerAge: z.string().trim().min(1).optional(),
+          gamesPlayed: z.array(z.string().trim().min(1)).min(1).optional(),
           published: z.coerce.boolean().default(true),
         })
         .superRefine((person, ctx) => {
@@ -101,6 +105,13 @@ export const collections = {
               code: "custom",
               path: ["photoAlt"],
               message: "describe the photo when one is supplied",
+            });
+          }
+          if (person.gamerAvatar && !person.gamerAvatarAlt) {
+            ctx.addIssue({
+              code: "custom",
+              path: ["gamerAvatarAlt"],
+              message: "describe the gamer avatar when one is supplied",
             });
           }
         }),
