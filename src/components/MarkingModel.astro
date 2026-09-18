@@ -1,12 +1,18 @@
 ---
+interface MarkingBand {
+  tier: string;
+  descriptor: string;
+}
+
 interface WeightedMarking {
   mode: "weighted";
-  criteria: { name: string; weight: number }[];
+  criteria: { name: string; weight: number; bands?: MarkingBand[] }[];
 }
 
 interface HolisticMarking {
   mode: "holistic";
   description: string;
+  bands?: MarkingBand[];
 }
 
 interface Props {
@@ -30,4 +36,43 @@ const { marking } = Astro.props;
       </tbody>
     </table>
   )}
+  {marking.mode === "holistic" && marking.bands && (
+    <table class="marking-bands">
+      <caption>What each tier looks like</caption>
+      <thead><tr><th scope="col">Tier</th><th scope="col">Descriptor</th></tr></thead>
+      <tbody>
+        {marking.bands.map((band) => (
+          <tr><td>{band.tier}</td><td>{band.descriptor}</td></tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+  {marking.mode === "weighted" &&
+    marking.criteria.map(
+      (criterion) =>
+        criterion.bands && (
+          <table class="marking-bands">
+            <caption>{criterion.name} — what each tier looks like</caption>
+            <thead><tr><th scope="col">Tier</th><th scope="col">Descriptor</th></tr></thead>
+            <tbody>
+              {criterion.bands.map((band) => (
+                <tr><td>{band.tier}</td><td>{band.descriptor}</td></tr>
+              ))}
+            </tbody>
+          </table>
+        ),
+    )}
 </section>
+
+<style>
+  .marking-bands {
+    margin-block-start: 1rem;
+  }
+
+  .marking-bands caption {
+    margin-block-end: 0.4rem;
+    color: var(--at-text-secondary);
+    font-size: 0.9rem;
+    text-align: left;
+  }
+</style>

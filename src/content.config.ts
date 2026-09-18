@@ -8,11 +8,25 @@ const courseNodeLoader = (dir: string) =>
   glob({ pattern: ["**/*.{md,mdx}", "!**/CLAUDE.md"], base: `src/content/${dir}` });
 const teacherRefs = z.array(reference("people")).min(1);
 
+// A standards-based grade band for one criterion: a named tier (this
+// course's combat vocabulary standing in for HD/D/C/N) plus what that tier
+// actually looks like for this specific criterion, not a generic scale.
+const markingBand = z.object({
+  tier: z.string().trim().min(1),
+  descriptor: z.string().trim().min(1),
+});
+
 const weightedMarking = z
   .object({
     mode: z.literal("weighted"),
     criteria: z
-      .array(z.object({ name: z.string().trim().min(1), weight: z.number().positive() }))
+      .array(
+        z.object({
+          name: z.string().trim().min(1),
+          weight: z.number().positive(),
+          bands: z.array(markingBand).min(2).optional(),
+        }),
+      )
       .min(1),
   })
   .superRefine((marking, ctx) => {
@@ -29,6 +43,7 @@ const weightedMarking = z
 const holisticMarking = z.object({
   mode: z.literal("holistic"),
   description: z.string().trim().min(40),
+  bands: z.array(markingBand).min(2).optional(),
 });
 
 export const collections = {
@@ -51,6 +66,16 @@ export const collections = {
         due: z.coerce.date(),
         weight: z.coerce.number().positive().max(100),
         marking: z.discriminatedUnion("mode", [weightedMarking, holisticMarking]).optional(),
+        // The reflection sits beside the artifact, not inside it: a short,
+        // specific prompt (Death Notes' ~200-word convention, not a generic
+        // "what did you learn") naming one decision the artifact doesn't
+        // explain on its own.
+        reflection: z
+          .object({
+            prompt: z.string().trim().min(1),
+            words: z.coerce.number().int().positive(),
+          })
+          .optional(),
       })
       .loose(),
   }),
