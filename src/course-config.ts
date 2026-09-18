@@ -53,9 +53,10 @@ export const courseMeta = slopCourseMetaSchema.parse({
   startDate: "2027-02-22",
   endDate: "2027-05-28",
   description:
-    "A Souls-like withholds comfort on purpose, in every subsystem at once. " +
-    "Each week tests that claim against one subsystem — death, combat, " +
-    "geography, story, sound, community — through close argument against " +
-    "specific games, from Demon's Souls onward.",
-  tags: ["souls-like", "game design", "critical theory"],
+    "Real difficulty doesn't kill the player — it makes them certain, the " +
+    "instant after they die, that the next attempt can win. Twelve design " +
+    "workshops dissect how a Souls-like builds that belief, through " +
+    "geography, combat and boss staging, each producing an artefact " +
+    "rather than an argument about one.",
+  tags: ["souls-like", "game design", "level design"],
 }) satisfies CourseMetaInput;
