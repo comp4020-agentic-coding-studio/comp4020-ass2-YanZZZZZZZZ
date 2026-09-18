@@ -13,11 +13,11 @@ produces an artefact... if a week's exercise could be lifted into a generic
 the thesis and needs to be rewritten, not padded"
 ([`6ba9653`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass2-YanZZZZZZZZ/commit/6ba9653eed26093d4276d906c5e342b7e0f9c13e)).
 The same commit's "Explicitly not doing" section is the other half of that
-decision — two interactive widgets earmarked for the specific weeks that
-need them and left unbuilt until then, no policies page padded out with a
-generic disclaimer. I kept that as a standing constraint, not a one-off
-instruction — the failure mode I was directing against was building
-something to look thorough, not refusing to build something.
+decision — no interactive widget unless a specific week needs one, no
+policies page padded out with a generic disclaimer. I kept that as a
+standing constraint, not a one-off instruction — the failure mode I was
+directing against was building something to look thorough, not refusing
+to build something.
 
 The rubric decision is where directing actually changed mid-assignment.
 I asked for the lightest version first — a reflection field plus grade-band
@@ -38,13 +38,12 @@ starter's own date check already gave everything else
 ([`7f8f9c4`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass2-YanZZZZZZZZ/commit/7f8f9c4cdd50fe6c86dadfb5cc1a1fca5b660411)
 →
 [`c687f4c`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass2-YanZZZZZZZZ/commit/c687f4c23ade40a68689a7be9b0997e0e905387f)).
-The late-work rule stays deliberately small: instead of inventing a
-percentage penalty, I reused the late-work language the Policies page
-already had, so a late entry scores zero, absorbed by the drop-lowest
-slot rather than a new mechanism nobody asked for. Repeating the same bands-plus-reflection
-shape by hand across four assessment files was the signal it belonged in
-the harness, not the content, so I wrote it into `CLAUDE.md` as a standing
-rule once the pattern held
+The late-work rule stays small: instead of a new percentage penalty, I
+reused the Policies page's existing language, so a late entry scores
+zero, absorbed by the drop-lowest slot. Repeating the same
+bands-plus-reflection shape by hand across four files was the signal it
+belonged in the harness, not the content, so I wrote it into `CLAUDE.md`
+as a standing rule
 ([`735dae7`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass2-YanZZZZZZZZ/commit/735dae7e7c14b08dbf4239a41191fd5226155731)).
 
 I didn't accept every result on the first read. Checking the rendered
@@ -56,9 +55,13 @@ many shortcut loops Week 3 requires. Both got fixed in the same pass that
 rolled the rubric pattern out to Loadout Pitch and Final Project
 ([`7aef257`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass2-YanZZZZZZZZ/commit/7aef2578a7fb5772e78ab6d25078365205e58482)...[`32d1a8c`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass2-YanZZZZZZZZ/commit/32d1a8c4f61b82f1f3563707e02e36e10ffae304)).
 
-What I left out on purpose: no fourth marking mode invented for symmetry
-once portfolio existed, and the two widgets `CLAUDE.md` earmarks for
-specific weeks — a death-currency calculator for week 8's economy
-lecture, a click-to-parry timing demo for week 4's combat rhetoric — stay
-unbuilt. The rule governing them, build once that week's prose is in and
-green, hasn't changed, so neither has the decision.
+What I left out on purpose stayed out: no fourth marking mode invented for
+symmetry once portfolio existed. The two earmarked widgets — a
+death-currency calculator for week 8, a click-to-parry demo for week 4 —
+I checked rather than left alone: both weeks' prose had already landed,
+so the precondition the earlier decision was waiting on was already met.
+Restating "still unbuilt" unchecked would have been the same drift the
+rendered-bug pass above caught, so I built both and reworded the
+standing rule to state what exists, not what's earmarked
+([`82368b2`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass2-YanZZZZZZZZ/commit/82368b2df85a02e3f56d4fc20c2ec017f7ca7265),
+[`a0bc7d9`](https://github.com/comp4020-agentic-coding-studio/comp4020-ass2-YanZZZZZZZZ/commit/a0bc7d9f64cf449074f7f2d260b0475ca3bb0ba8)).
