@@ -23,23 +23,30 @@ for (const session of sessions) {
   }
 }
 
-const beats = [...byWeek.entries()]
-  .sort(([a], [b]) => a - b)
-  .map(([week, { entry, kind }]) => ({
-    week,
-    title: entry.data.title,
-    description: entry.data.description,
-    href: withBase(`/${kind}/${entry.id}/`),
-  }));
+const entries = [...byWeek.entries()].sort(([a], [b]) => a - b);
+
+// A visual echo of the genre's own kindled-versus-dark register (see
+// weak-guidance-and-bad-endings), not a progress tracker: the first bonfire
+// is barely lit, the last is the one Week 12 is literally named after ("the
+// bonfire crit"). Static per build, never claims to know which week the
+// viewer is actually up to.
+const beats = entries.map(([week, { entry, kind }], index) => ({
+  week,
+  title: entry.data.title,
+  description: entry.data.description,
+  href: withBase(`/${kind}/${entry.id}/`),
+  flame: 0.5 + 0.5 * (index / (entries.length - 1)),
+}));
 ---
 
 <div class="timeline-track">
   <ol class="timeline">
     {
       beats.map((beat) => (
-        <li class="timeline-item">
-          <span class="timeline-week" aria-hidden="true">
-            {beat.week}
+        <li class="timeline-item" style={`--flame: ${beat.flame}`}>
+          <span class="timeline-node">
+            <span class="timeline-flame" aria-hidden="true" />
+            <span class="timeline-week">Week {beat.week}</span>
           </span>
           <h3>
             <a href={beat.href}>{beat.title}</a>
@@ -52,9 +59,9 @@ const beats = [...byWeek.entries()]
 </div>
 
 <style>
-  /* Line and node colour both derive from --at-primary via color-mix, the
-     same approach PageLayout.astro uses for .at-card, so this skin can't
-     drift from the brand token. */
+  /* Line and flame colour both derive from --at-primary/--at-tertiary via
+     color-mix, the same approach PageLayout.astro uses for .at-card, so
+     this skin can't drift from the brand tokens. */
   .timeline-track {
     overflow-x: auto;
     padding-block-end: 0.5rem;
@@ -82,26 +89,51 @@ const beats = [...byWeek.entries()]
   .timeline-item {
     position: relative;
     flex: 0 0 15rem;
+    padding: 0.5rem;
+    border-radius: var(--at-radius-md, 0.5rem);
+    transition: background-color 0.15s ease;
   }
 
-  .timeline-week {
+  .timeline-item:hover,
+  .timeline-item:focus-within {
+    background: color-mix(in oklch, var(--at-primary) 8%, transparent);
+  }
+
+  .timeline-node {
     position: relative;
     z-index: 1;
     display: grid;
+    justify-items: center;
+    margin-block-end: 0.75rem;
+  }
+
+  .timeline-flame {
+    display: block;
     width: 2.2rem;
     height: 2.2rem;
-    margin-block-end: 0.75rem;
-    place-items: center;
-    border-radius: 50%;
-    background: var(--at-primary);
-    color: var(--at-bg);
-    font-family: "Cinzel", var(--at-font-body);
-    font-weight: 700;
+    background-color: color-mix(in oklch, var(--at-primary) calc(var(--flame) * 100%), var(--at-tertiary));
+    opacity: calc(0.5 + var(--flame) * 0.5);
+    transform: scale(calc(0.7 + var(--flame) * 0.3));
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 92 C28 92 16 74 22 54 C25 44 24 34 30 20 C33 34 45 30 46 42 C47 50 58 48 60 36 C63 46 76 52 76 66 C76 82 68 92 50 92 Z'/%3E%3C/svg%3E");
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 92 C28 92 16 74 22 54 C25 44 24 34 30 20 C33 34 45 30 46 42 C47 50 58 48 60 36 C63 46 76 52 76 66 C76 82 68 92 50 92 Z'/%3E%3C/svg%3E");
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+  }
+
+  .timeline-week {
+    margin-block-start: 0.4rem;
+    color: var(--at-text-secondary);
+    font-size: 0.8rem;
   }
 
   .timeline-item h3 {
     margin-block: 0 0.25rem;
     font-size: 1rem;
+    text-align: center;
   }
 
   .timeline-item p {
@@ -110,7 +142,16 @@ const beats = [...byWeek.entries()]
     overflow: hidden;
     color: var(--at-text-secondary);
     font-size: 0.9rem;
-    -webkit-line-clamp: 4;
+    text-align: center;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
+  }
+
+  /* Progressive disclosure, not a widget: hovering or focusing a beat
+     reveals its full line, the way approaching an item in the genre's own
+     menus expands its description rather than showing everything at once. */
+  .timeline-item:hover p,
+  .timeline-item:focus-within p {
+    -webkit-line-clamp: unset;
   }
 </style>
