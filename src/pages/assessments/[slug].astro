@@ -35,7 +35,24 @@ const { Content } = await render(assessment);
       </Callout>
     )
   }
-  <p><strong>Due:</strong> {formatCourseDate(assessment.data.due)} · <strong>Weight:</strong> {assessment.data.weight}%</p>
+  <p>
+    <strong>Due:</strong>{" "}
+    {assessment.data.weeklyDue ? "Weekly — see schedule below" : formatCourseDate(assessment.data.due)} ·{" "}
+    <strong>Weight:</strong> {assessment.data.weight}%
+  </p>
+  {
+    assessment.data.weeklyDue && (
+      <table>
+        <caption>Weekly due dates</caption>
+        <thead><tr><th scope="col">Week</th><th scope="col">Due</th></tr></thead>
+        <tbody>
+          {assessment.data.weeklyDue.map((entry) => (
+            <tr><td>{entry.week}</td><td>{formatCourseDate(entry.due)}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
   <Content />
   <SpecList spec={assessment.data.spec}>
     The brief poses the problem and leaves room for a response. The spec is the

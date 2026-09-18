@@ -16,7 +16,8 @@ const visible = assessments.sort((a, b) => a.data.week - b.data.week);
         {assessment.data.weight != null && (
           <p>
             <small>
-              Due {formatCourseDate(assessment.data.due)} · Weight: {assessment.data.weight}%{assessment.data.draft && " · Draft"}
+              Due {assessment.data.weeklyDue ? "weekly" : formatCourseDate(assessment.data.due)} · Weight:{" "}
+              {assessment.data.weight}%{assessment.data.draft && " · Draft"}
             </small>
           </p>
         )}

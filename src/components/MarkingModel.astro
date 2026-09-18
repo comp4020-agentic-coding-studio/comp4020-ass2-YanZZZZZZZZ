@@ -15,8 +15,16 @@ interface HolisticMarking {
   bands?: MarkingBand[];
 }
 
+interface PortfolioMarking {
+  mode: "portfolio";
+  entryPoints: number;
+  totalEntries: number;
+  countedEntries: number;
+  bands: MarkingBand[];
+}
+
 interface Props {
-  marking: WeightedMarking | HolisticMarking;
+  marking: WeightedMarking | HolisticMarking | PortfolioMarking;
 }
 
 const { marking } = Astro.props;
@@ -24,9 +32,8 @@ const { marking } = Astro.props;
 
 <section aria-labelledby="how-marked">
   <h2 id="how-marked">How it is marked</h2>
-  {marking.mode === "holistic" ? (
-    <p>{marking.description}</p>
-  ) : (
+  {marking.mode === "holistic" && <p>{marking.description}</p>}
+  {marking.mode === "weighted" && (
     <table>
       <thead><tr><th scope="col">Criterion</th><th scope="col">Weight</th></tr></thead>
       <tbody>
@@ -36,9 +43,27 @@ const { marking } = Astro.props;
       </tbody>
     </table>
   )}
+  {marking.mode === "portfolio" && (
+    <p>
+      Each entry is worth up to {marking.entryPoints} points; the best {marking.countedEntries} of{" "}
+      {marking.totalEntries} count toward the {marking.entryPoints * marking.countedEntries}-point total. An
+      entry outside that count still gets feedback, it just isn't scored.
+    </p>
+  )}
   {marking.mode === "holistic" && marking.bands && (
     <table class="marking-bands">
       <caption>What each tier looks like</caption>
+      <thead><tr><th scope="col">Tier</th><th scope="col">Descriptor</th></tr></thead>
+      <tbody>
+        {marking.bands.map((band) => (
+          <tr><td>{band.tier}</td><td>{band.descriptor}</td></tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+  {marking.mode === "portfolio" && (
+    <table class="marking-bands">
+      <caption>What each tier looks like, per entry</caption>
       <thead><tr><th scope="col">Tier</th><th scope="col">Descriptor</th></tr></thead>
       <tbody>
         {marking.bands.map((band) => (

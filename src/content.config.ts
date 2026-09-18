@@ -46,6 +46,23 @@ const holisticMarking = z.object({
   bands: z.array(markingBand).min(2).optional(),
 });
 
+// A recurring deliverable marked as a set of small, independent entries
+// (Death Notes: one per teaching week) rather than one criteria table —
+// the best `countedEntries` of `totalEntries` count, so a single missed or
+// weak entry doesn't need its own extension or exception.
+const portfolioMarking = z
+  .object({
+    mode: z.literal("portfolio"),
+    entryPoints: z.number().positive(),
+    totalEntries: z.number().int().positive(),
+    countedEntries: z.number().int().positive(),
+    bands: z.array(markingBand).min(2),
+  })
+  .refine((marking) => marking.countedEntries <= marking.totalEntries, {
+    message: "countedEntries cannot exceed totalEntries",
+    path: ["countedEntries"],
+  });
+
 export const collections = {
   sessions: defineCollection({
     loader: courseNodeLoader("sessions"),
@@ -65,7 +82,9 @@ export const collections = {
         week: weekSchema,
         due: z.coerce.date(),
         weight: z.coerce.number().positive().max(100),
-        marking: z.discriminatedUnion("mode", [weightedMarking, holisticMarking]).optional(),
+        marking: z
+          .discriminatedUnion("mode", [weightedMarking, holisticMarking, portfolioMarking])
+          .optional(),
         // The reflection sits beside the artifact, not inside it: a short,
         // specific prompt (Death Notes' ~200-word convention, not a generic
         // "what did you learn") naming one decision the artifact doesn't
@@ -76,8 +95,30 @@ export const collections = {
             words: z.coerce.number().int().positive(),
           })
           .optional(),
+        // Only set on a portfolio-marked deliverable: one due date per
+        // counted entry, replacing the single `due` above as the thing a
+        // student actually has to track week to week.
+        weeklyDue: z.array(z.object({ week: weekSchema, due: z.coerce.date() })).optional(),
       })
-      .loose(),
+      .loose()
+      .superRefine((assessment, ctx) => {
+        if (assessment.marking?.mode !== "portfolio") return;
+        const { entryPoints, countedEntries, totalEntries } = assessment.marking;
+        if (entryPoints * countedEntries !== assessment.weight) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["marking"],
+            message: `entryPoints (${entryPoints}) × countedEntries (${countedEntries}) is ${entryPoints * countedEntries}, not the assessment's weight (${assessment.weight})`,
+          });
+        }
+        if (assessment.weeklyDue && assessment.weeklyDue.length !== totalEntries) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["weeklyDue"],
+            message: `weeklyDue has ${assessment.weeklyDue.length} entries, not totalEntries (${totalEntries})`,
+          });
+        }
+      }),
   }),
 
   lectures: defineCollection({
