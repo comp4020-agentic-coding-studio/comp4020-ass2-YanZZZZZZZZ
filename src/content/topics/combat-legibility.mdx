@@ -8,6 +8,8 @@ related:
   - lectures/week-04
 ---
 
+import ParryTimingDemo from "../../components/ParryTimingDemo.astro";
+
 Call a Souls-like "hard" and most people mean the combat, and most people
 mean it wrong: reaction speed is rarely the actual test. Dark Souls' attacks
 are slower, on average, than a modern shooter's decision loop — the test is
@@ -24,6 +26,8 @@ shared resource, so aggression has to be paid for in tempo, not just risk.
 Animation commitment is the withholding of the undo — once a swing starts,
 the input has already been spent, whether or not the target moved. A miss
 costs the same stamina and the same vulnerable window as a hit.
+
+<ParryTimingDemo />
 
 Put together, the fight is legible in the sense a chess position is
 legible: nothing is hidden, and losing means you misread information that

@@ -1,0 +1,162 @@
+---
+// Week 4: turns "telegraphs are learnable, not reflexive" from a claim into
+// something you can fail at twice and then read correctly the third time.
+---
+
+<div class="parry-timing-demo">
+  <div class="stage" id="parry-stage">
+    <div class="windup-track">
+      <div class="windup-fill" id="windup-fill"></div>
+      <div class="parry-window" id="parry-window"></div>
+    </div>
+    <p class="status" id="parry-status" aria-live="polite">Press start to see the wind-up.</p>
+  </div>
+  <div class="controls">
+    <button type="button" id="parry-start">Start the swing</button>
+    <button type="button" id="parry-click" disabled>Parry</button>
+  </div>
+</div>
+
+<style>
+  .parry-timing-demo {
+    border: 1px solid color-mix(in oklch, var(--at-primary) 40%, transparent);
+    background: color-mix(in oklch, var(--at-bg) 94%, var(--at-tertiary));
+    border-radius: 0.5rem;
+    padding: 1.25rem 1.5rem;
+    margin-block: 1.5rem;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .windup-track {
+    position: relative;
+    height: 1.25rem;
+    border-radius: 999px;
+    background: color-mix(in oklch, var(--at-bg) 80%, var(--at-tertiary));
+    overflow: hidden;
+  }
+
+  .windup-fill {
+    position: absolute;
+    inset: 0;
+    width: 0%;
+    background: color-mix(in oklch, var(--at-primary) 65%, transparent);
+    transition: width linear;
+  }
+
+  .parry-window {
+    position: absolute;
+    inset: 0;
+    left: 100%;
+    width: 0%;
+    background: color-mix(in oklch, var(--at-secondary) 75%, transparent);
+  }
+
+  .status {
+    margin: 0;
+    font-weight: 600;
+    min-height: 1.4em;
+  }
+
+  .controls {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  button {
+    font: inherit;
+    padding: 0.5rem 1.1rem;
+    border-radius: 0.35rem;
+    border: 1px solid color-mix(in oklch, var(--at-primary) 60%, transparent);
+    background: var(--at-bg);
+    cursor: pointer;
+  }
+
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+</style>
+
+<script>
+  type Phase = "idle" | "winding" | "window" | "done";
+
+  function initDemo(root: HTMLElement) {
+    const startButton = root.querySelector<HTMLButtonElement>("#parry-start")!;
+    const parryButton = root.querySelector<HTMLButtonElement>("#parry-click")!;
+    const status = root.querySelector<HTMLElement>("#parry-status")!;
+    const fill = root.querySelector<HTMLElement>("#windup-fill")!;
+    const windowBar = root.querySelector<HTMLElement>("#parry-window")!;
+
+    let phase: Phase = "idle";
+    let windowTimeout: ReturnType<typeof setTimeout> | undefined;
+    let doneTimeout: ReturnType<typeof setTimeout> | undefined;
+
+    const WINDOW_MS = 180;
+
+    function reset() {
+      clearTimeout(windowTimeout);
+      clearTimeout(doneTimeout);
+      fill.style.transition = "none";
+      fill.style.width = "0%";
+      windowBar.style.width = "0%";
+      windowBar.style.left = "100%";
+    }
+
+    function startSwing() {
+      reset();
+      phase = "winding";
+      startButton.disabled = true;
+      parryButton.disabled = false;
+      status.textContent = "Watching the wind-up — click Parry once it's committed, not before.";
+
+      const windupMs = 900 + Math.random() * 800;
+      const windowStartPct = ((windupMs - 0) / (windupMs + WINDOW_MS)) * 100;
+
+      // force reflow so the transition below actually animates from 0%
+      void fill.offsetWidth;
+      fill.style.transition = `width ${windupMs}ms linear`;
+      fill.style.width = `${windowStartPct}%`;
+      windowBar.style.left = `${windowStartPct}%`;
+      windowBar.style.width = `${100 - windowStartPct}%`;
+
+      windowTimeout = setTimeout(() => {
+        phase = "window";
+      }, windupMs);
+
+      doneTimeout = setTimeout(() => {
+        if (phase === "window") {
+          phase = "done";
+          status.textContent = "Too late — the swing already landed.";
+          endRound();
+        }
+      }, windupMs + WINDOW_MS);
+    }
+
+    function endRound() {
+      startButton.disabled = false;
+      parryButton.disabled = true;
+      phase = "idle";
+    }
+
+    function attemptParry() {
+      if (phase === "winding") {
+        status.textContent = "Too early — you swung before the tell finished playing out.";
+        clearTimeout(windowTimeout);
+        clearTimeout(doneTimeout);
+        endRound();
+      } else if (phase === "window") {
+        status.textContent = "Parried — read the animation, not the clock.";
+        clearTimeout(doneTimeout);
+        endRound();
+      }
+      // clicks while idle/done do nothing — the button is disabled then anyway
+    }
+
+    startButton.addEventListener("click", startSwing);
+    parryButton.addEventListener("click", attemptParry);
+  }
+
+  document.querySelectorAll<HTMLElement>(".parry-timing-demo").forEach(initDemo);
+</script>

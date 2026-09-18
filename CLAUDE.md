@@ -143,11 +143,13 @@ made easiest to validate.
 ## Explicitly not doing
 
 - No custom interactive widget unless a specific week's argument needs one —
-  not added to pad the page count. Two are earmarked because a specific
-  week's material asks for them: a death-currency cost calculator on
-  [the economy](/topics/) (week 8) and a click-to-parry timing demo on
-  [combat rhetoric](/topics/) (week 4). Build them as their own commit, after
-  the week's prose content is in and green, not before.
+  not added to pad the page count. Two exist because a specific week's
+  material asked for one, each built as its own commit only once that
+  week's prose content had landed and gone green: a death-currency cost
+  calculator on [the economy](/topics/the-bonfire-economy/) (week 8) and a
+  click-to-parry timing demo on [combat legibility](/topics/combat-legibility/)
+  (week 4). A third needs the same bar — a specific week's argument that
+  prose alone can't make, not symmetry with these two.
 - No policies page unless there's a real policy worth stating beyond what a
   generic course would say; a placeholder policy page is worse than none.
 - No week added purely to reach twelve if the thesis runs out of subsystems
